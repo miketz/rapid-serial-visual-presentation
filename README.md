@@ -23,7 +23,7 @@ Requires Emacs 24.4 which will support:
   - cl-lib
   - with-eval-after-load for sample config below
 
-Place **rapid-serial-visual-presentation.el** in **/your/chosen/folder**.
+Place **rsvp.el** in **/your/chosen/folder**.
 
 Add the following text to your .emacs or init.el file:
 
