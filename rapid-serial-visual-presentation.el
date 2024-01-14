@@ -94,10 +94,10 @@ larger words."
   ;; for short words.
   (/ (length word) 3))
 
-;; We must ensure the focal point display has enough padding for the part of
-;; the word left of focal point to fit on the screen. Use the longest possible
-;; word to calculate minimum padding. Also it looks good to some default padding
-;; anyway.
+;; We must ensure the focal point (FP) display has enough padding for the part
+;; of the word left of FP to fit on the screen. Use the longest possible word
+;; to calculate minimum padding. Also it looks good to have some default
+;; padding anyway.
 (defconst rsvp--longest-word "pneumonoultramicroscopicsilicovolcanoconiosis"
   "Longest word in English.")
 
