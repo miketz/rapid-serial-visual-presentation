@@ -148,7 +148,7 @@ Creates private variables:
                               rsvp--min-focal-point-padding)
                            ;; add extra 1 to fix it?
                            1))
-         ;; overlay for focal point. avoid creating a new overlay for each word!
+         ;; overlay for focal point. resuse this overlay for each word.
          (ov nil))
     ;; This function is the return value.
     (lambda ()
