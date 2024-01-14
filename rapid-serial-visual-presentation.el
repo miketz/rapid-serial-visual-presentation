@@ -25,6 +25,8 @@
 ;;; Emacs.
 ;;;
 ;;; Requires Emacs 24.1 or later for lexical binding.
+;;; Recommended Emacs 24.4 or later for with-eval-after-load macro in the
+;;; sample config below.
 
 
 ;;; Installation:
