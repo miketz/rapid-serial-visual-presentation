@@ -5,6 +5,9 @@ a delay. This is known as "rapid serial visual presentation" or RSVP
 for short. The main idea is your eyes can focus in the same spot, with more
 time spent abosorbing words, less time moving your eyes left to right.
 
+This technique allows reading text on small screens without scrolling, as
+only 1 word needs to fit on the screen.
+
 In addition the words are aligned at a focal point, highlighted
 in red, where you might most easily identify the word. Currently this point
 is identified by a fake heuristic, not based on research. But the focal
