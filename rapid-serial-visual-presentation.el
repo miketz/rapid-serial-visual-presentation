@@ -62,26 +62,38 @@
   :prefix "rsvp-"
   :group 'tools)
 
-(defvar rsvp-buff-name "*serial-reader*")
+(defcustom rsvp-buff-name "*serial-reader*"
+  "Name of the output buffer"
+  :type 'string
+  :group 'rapid-serial-visual-presentation)
 
-(defvar rsvp-delay-seconds 0.3)
+(defcustom rsvp-delay-seconds 0.3
+  "Delay in seconds until next word display."
+  :type 'number
+  :group 'rapid-serial-visual-presentation)
 
-(defvar rsvp-font-scale-level 4
+(defcustom rsvp-font-scale-level 4
   "Number of steps to scale font size.
 Positive numbers will increase font size.
 0 will have no effect on font size.
-Negative numbers will decrease font size which you probably don't want.")
+Negative numbers will decrease font size which you probably don't want."
+  :type 'integer
+  :group 'rapid-serial-visual-presentation)
 
 ;; For now just add padding to achieve a more centered look.
 ;; although truly centering the text can be achieved via `window-height'
 ;; and `window-width', these functions do not account for font scaling.
-(defvar rsvp-pad-above 5
-  "New line padding above the text.")
-(defvar rsvp-pad-left 2
+(defcustom rsvp-pad-above 5
+  "New line padding above the text."
+  :type 'integer
+  :group 'rapid-serial-visual-presentation)
+(defcustom rsvp-pad-left 2
   "Space padding left of the text.
 Note there will already be default padding up to the focal point maker. This
 var is extra padding on top of that, so you may need to play around with this
-value until it looks how you like.")
+value until it looks how you like."
+  :type 'integer
+  :group 'rapid-serial-visual-presentation)
 
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
@@ -301,6 +313,7 @@ back by that amount."
   (interactive)
   ;; call the closure fn. it has secret private vars.
   (funcall rsvp--rewind-fn))
+
 
 ;; use a hook to cancel the timer if output buffer is killed
 (add-hook 'rapid-serial-visual-presentation-mode-hook
