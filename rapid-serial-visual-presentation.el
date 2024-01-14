@@ -13,7 +13,7 @@
 ;;; for short. The main idea is your eyes can focus in the same spot, more time
 ;;; spent abosorbing words, less time moving your eyes left to right.
 ;;;
-;;; This technique allows reading text on small screens wihtout scrolling, as
+;;; This technique allows reading text on small screens without scrolling, as
 ;;; only 1 word needs to fit on the screen.
 ;;;
 ;;; In addition the words are aligned at a focal point, highlighted
