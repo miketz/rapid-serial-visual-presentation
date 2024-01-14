@@ -29,10 +29,10 @@ Add the following text to your .emacs or init.el file:
 
 ```lisp
 ;;;----------------------------------------------------------------------------
-;;; rapid-serial-visual-presentation
+;;; rsvp.  rapid serial visual presentation.  speed reader.
 ;;;----------------------------------------------------------------------------
 (push "/your/chosen/folder" load-path)
-(autoload #'rsvp-start-reader "rapid-serial-visual-presentation" nil t)
+(autoload #'rsvp-start-reader "rsvp" nil t)
 ;; Config vars
 (setq rsvp-delay-seconds 0.4)
 (setq rsvp-font-scale-level 3)

@@ -1,4 +1,4 @@
-;;; rapid-serial-visual-presentation.el --- Speed reading -*- lexical-binding: t -*-
+;;; rsvp.el --- Rapid serial visual presentation -*- lexical-binding: t -*-
 
 ;;; License: GPL version 3
 
@@ -31,11 +31,11 @@
 
 
 ;;; Installation:
-;;; Place `rapid-serial-visual-presentation.el' in `/your/chosen/folder'.
+;;; Place `rsvp.el' in `/your/chosen/folder'.
 ;;; Add the following text to your .emacs or init.el file:
 ;;;
 ;;; (push "/your/chosen/folder" load-path)
-;;; (autoload #'rsvp-start-reader "rapid-serial-visual-presentation" nil t)
+;;; (autoload #'rsvp-start-reader "rsvp" nil t)
 ;;; ;; Config vars
 ;;; (setq rsvp-delay-seconds 0.4)
 ;;; (setq rsvp-font-scale-level 3)
@@ -132,8 +132,8 @@ larger words."
   ;; binding a key for them. This binding will be shown to the user in the
   ;; header of the output buffer.
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c q") #'rsvp-stop-reader)
-            (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
+            ;; (define-key map (kbd "C-c q") #'rsvp-stop-reader)
+            ;; (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
             map))
 
 
@@ -332,4 +332,4 @@ index back by that amount."
 
 (provide 'rsvp)
 
-;;; rapid-serial-visual-presentation.el ends here
+;;; rsvp.el ends here
