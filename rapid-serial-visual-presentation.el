@@ -130,9 +130,10 @@ larger words."
 Returns a closure fn. The point of the closure is to make private variables,
 avoiding global defvars that users may mess with.
 
-Closes over variables:
+Creates private variables:
   i: word list index
-  overlay-point: location in buffer of the focal point character"
+  overlay-point: location in buffer of the focal point character
+  ov: the overlay"
   (let* ((i 0) ;; word list index
          ;; where to apply the focal point face
          (overlay-point (+ rsvp-pad-above
@@ -146,11 +147,8 @@ Closes over variables:
                               rsvp--min-focal-point-padding)
                            ;; add extra 1 to fix it?
                            1))
-         (ov (make-overlay overlay-point
-                           (1+ overlay-point)
-                           buff)))
-
-    (overlay-put ov 'face 'rsvp-focal-point-face)
+         ;; overlay for focal point. avoid creating a new overlay for each word!
+         (ov nil))
     ;; This function is the return value.
     (lambda ()
       (with-current-buffer buff
@@ -177,7 +175,14 @@ Closes over variables:
         (insert "|\n")
         (insert rsvp--horizontal-line)
         ;; apply face to word focal point
-        (move-overlay ov overlay-point (1+ overlay-point))
+        (if (null ov)
+            (progn ;; create overlay
+              (setq ov (make-overlay overlay-point
+                                     (1+ overlay-point)
+                                     buff))
+              (overlay-put ov 'face 'rsvp-focal-point-face))
+          ;; else, move existing overlay. range gets messed up when text is deleted
+          (move-overlay ov overlay-point (1+ overlay-point)))
         ;; book keeping on index
         (cl-incf i)
         (when (>= i (length words))
