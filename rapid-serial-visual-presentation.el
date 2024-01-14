@@ -1,4 +1,4 @@
-;;; rapid-serial-visual-presentation.el --- speed reading -*- lexical-binding: t -*-
+;;; rapid-serial-visual-presentation.el --- Speed reading -*- lexical-binding: t -*-
 
 ;;; License: GPL version 3
 
@@ -45,10 +45,10 @@
 ;;; ;; Sample key binds.
 ;;; ;; Press "C-c r" with text highlighted (or not for full buffer text).
 ;;; (global-set-key (kbd "C-c r") #'rsvp-start-reader)
-;;; (with-eval-after-load 'rapid-serial-visual-presentation
+;;; (with-eval-after-load 'rsvp
 ;;;   ;; Sample key binds for the output buffer.
-;;;   (define-key rapid-serial-visual-presentation-mode-map (kbd "C-c q") #'rsvp-stop-reader)
-;;;   (define-key rapid-serial-visual-presentation-mode-map (kbd "C-c r") #'rsvp-rewind-reader))
+;;;   (define-key rsvp-mode-map (kbd "C-c q") #'rsvp-stop-reader)
+;;;   (define-key rsvp-mode-map (kbd "C-c r") #'rsvp-rewind-reader))
 
 
 ;;; TODO: centered view option? something like darkroom-mode? look into how to handle
@@ -57,20 +57,20 @@
 ;;; Code:
 (require 'cl-lib)
 
-(defgroup rapid-serial-visual-presentation nil
-  "Speed reading display technique."
+(defgroup rsvp nil
+  "Speed reading technique.  Rapid serial visual presentation."
   :prefix "rsvp-"
   :group 'tools)
 
 (defcustom rsvp-buff-name "*serial-reader*"
   "Name of the output buffer."
   :type 'string
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 
 (defcustom rsvp-delay-seconds 0.3
   "Delay in seconds until next word display."
   :type 'number
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 
 (defcustom rsvp-font-scale-level 4
   "Number of steps to scale font size.
@@ -78,7 +78,7 @@ Positive numbers will increase font size.
 0 will have no effect on font size.
 Negative numbers will decrease font size which you probably don't want."
   :type 'integer
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 
 ;; For now just add padding to achieve a more centered look.
 ;; although truly centering the text can be achieved via `window-height'
@@ -86,19 +86,19 @@ Negative numbers will decrease font size which you probably don't want."
 (defcustom rsvp-pad-above 5
   "New line padding above the text."
   :type 'integer
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 (defcustom rsvp-pad-left 2
   "Space padding left of the text.
 Note there will already be default padding up to the focal point maker.  This
 var is extra padding on top of that, so you may need to play around with this
 value until it looks how you like."
   :type 'integer
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
   "Face for the focal point character of a word."
-  :group 'rapid-serial-visual-presentation)
+  :group 'rsvp)
 
 
 
@@ -124,9 +124,9 @@ larger words."
 (defconst rsvp--min-focal-point-padding
   (rsvp-optimal-recognition-point rsvp--longest-word))
 
-(define-minor-mode rapid-serial-visual-presentation-mode
+(define-minor-mode rsvp-mode
   "Minor mode to support key binds and `kill-buffer-hook'."
-  :lighter " serial-reader"
+  :lighter " rsvp"
   ;; Ideally users should choose their own key binds. But it is important they
   ;; be able to STOP the serial reader easily. So I'm taking the liberty of
   ;; binding a key for them. This binding will be shown to the user in the
@@ -278,7 +278,7 @@ buffer text."
                (delete-overlay o))
 
       ;; turn on mode. supports key binds, and the kill-buffer-hook
-      (rapid-serial-visual-presentation-mode)
+      (rsvp-mode)
 
       ;; add a fancy header to the buffer. With info on how to abort.
       (set (make-local-variable 'header-line-format)
@@ -330,6 +330,6 @@ index back by that amount."
                       'make-it-local)))
 
 
-(provide 'rapid-serial-visual-presentation)
+(provide 'rsvp)
 
 ;;; rapid-serial-visual-presentation.el ends here
