@@ -18,6 +18,8 @@ Emacs.
 
 # Installation
 
+Requres Emacs 24.1 or later for lexical binding.
+
 Place **rapid-serial-visual-presentation.el** in **/your/chosen/folder**.
 
 Add the following text to your .emacs or init.el file:
@@ -39,5 +41,6 @@ Add the following text to your .emacs or init.el file:
 (global-set-key (kbd "C-c r") #'rsvp-start-reader)
 (with-eval-after-load 'rapid-serial-visual-presentation
   ;; Sample key binds for the output buffer.
-  (define-key rapid-serial-visual-presentation-mode-map (kbd "C-c q") #'rsvp-stop-reader))
+  (define-key rapid-serial-visual-presentation-mode-map (kbd "C-c q") #'rsvp-stop-reader)
+  (define-key rapid-serial-visual-presentation-mode-map (kbd "C-c r") #'rsvp-rewind-reader))
 ```
