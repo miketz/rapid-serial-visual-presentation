@@ -127,11 +127,8 @@ larger words."
 (define-minor-mode rsvp-mode
   "Minor mode to support key binds and `kill-buffer-hook'."
   :lighter " rsvp"
-  ;; Ideally users should choose their own key binds. But it is important they
-  ;; be able to STOP the serial reader easily. So I'm taking the liberty of
-  ;; binding a key for them. This binding will be shown to the user in the
-  ;; header of the output buffer.
   :keymap (let ((map (make-sparse-keymap)))
+            ;; No default bindings for now. User will choose them.
             ;; (define-key map (kbd "C-c q") #'rsvp-stop-reader)
             ;; (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
             map))
@@ -319,7 +316,7 @@ index back by that amount."
 
 
 ;; use a hook to cancel the timer if output buffer is killed
-(add-hook 'rapid-serial-visual-presentation-mode-hook
+(add-hook 'rsvp-mode-hook
           (lambda ()
             (message (format "adding clean up hook to buffer %s"
                              (buffer-name (current-buffer))))
