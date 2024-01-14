@@ -16,6 +16,7 @@ Emacs.
 # Installation
 
 Place **rapid-serial-visual-presentation.el** in **/your/chosen/folder**.
+
 Add the following text to your .emacs or init.el file:
 
 ```lisp
