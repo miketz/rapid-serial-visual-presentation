@@ -18,9 +18,10 @@ Emacs.
 
 # Installation
 
-Requires Emacs 24.1 or later for lexical binding.
-
-Recommended Emacs 24.4 or later for with-eval-after-load macro in the sample config below.
+Requires Emacs 24.4 which will support:
+  - lexical binding
+  - cl-lib
+  - with-eval-after-load for sample config below
 
 Place **rapid-serial-visual-presentation.el** in **/your/chosen/folder**.
 

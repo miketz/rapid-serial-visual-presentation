@@ -2,7 +2,7 @@
 
 ;;; License: GPL version 3
 
-;;; Package-Requires: ((emacs "24.1"))
+;;; Package-Requires: ((emacs "24.4"))
 ;;; Version: 0.1.0
 ;;; URL: https://github.com/miketz/rapid-serial-visual-presentation
 
@@ -24,9 +24,10 @@
 ;;; Originally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
 ;;; Emacs.
 ;;;
-;;; Requires Emacs 24.1 or later for lexical binding.
-;;; Recommended Emacs 24.4 or later for with-eval-after-load macro in the
-;;; sample config below.
+;;; Requires Emacs 24.4 which will support:
+;;;   - lexical binding
+;;;   - cl-lib
+;;;   - with-eval-after-load for sample config below
 
 
 ;;; Installation:
