@@ -227,6 +227,11 @@ Uses selected region if available, otherwise the entire buffer text."
       ;; scale font size to configured value
       (text-scale-set rsvp-font-scale-level)
 
+      ;; Although only 1 overlay is created per run, avoid amassing overlays.
+      ;; But `delete-overlay' does not truly delete the overlay? Delete anyway.
+      (cl-loop for o in (car (overlay-lists)) do
+               (delete-overlay o))
+
       ;; turn on mode. supports key binds, and the kill-buffer-hook
       (rapid-serial-visual-presentation-mode)
 
