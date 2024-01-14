@@ -154,42 +154,43 @@ Creates private variables:
     (lambda ()
       ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
       ;; for each word. But works OK for now.
-      (with-current-buffer buff
-        (erase-buffer)
-        ;; add padding
-        (cl-loop repeat rsvp-pad-above do (insert "\n"))
-        (insert rsvp--horizontal-line)
-        (cl-loop repeat (+ rsvp-pad-left
-                           rsvp--min-focal-point-padding)
-                 do (insert " "))
-        (insert "|\n")
-        (let* ((orp (rsvp-optimal-recognition-point (nth i words)))
-               (orp-padding (- rsvp--min-focal-point-padding orp)))
-          ;; insert spaces to line up orp with the |
+      (let ((word (aref words i)))
+        (with-current-buffer buff
+          (erase-buffer)
+          ;; add padding
+          (cl-loop repeat rsvp-pad-above do (insert "\n"))
+          (insert rsvp--horizontal-line)
           (cl-loop repeat (+ rsvp-pad-left
-                             orp-padding)
+                             rsvp--min-focal-point-padding)
                    do (insert " "))
-          ;; insert word
-          (insert (nth i words)))
-        (insert "\n")
-        (cl-loop repeat (+ rsvp-pad-left
-                           rsvp--min-focal-point-padding)
-                 do (insert " "))
-        (insert "|\n")
-        (insert rsvp--horizontal-line)
-        ;; apply face to word focal point
-        (if (null ov)
-            (progn ;; create overlay
-              (setq ov (make-overlay overlay-point
-                                     (1+ overlay-point)
-                                     buff))
-              (overlay-put ov 'face 'rsvp-focal-point-face))
-          ;; else, move existing overlay. range gets messed up when text is deleted
-          (move-overlay ov overlay-point (1+ overlay-point)))
-        ;; book keeping on index
-        (cl-incf i)
-        (when (>= i (length words))
-          (rsvp-stop-reader))))))
+          (insert "|\n")
+          (let* ((orp (rsvp-optimal-recognition-point word))
+                 (orp-padding (- rsvp--min-focal-point-padding orp)))
+            ;; insert spaces to line up orp with the |
+            (cl-loop repeat (+ rsvp-pad-left
+                               orp-padding)
+                     do (insert " "))
+            ;; insert word
+            (insert word))
+          (insert "\n")
+          (cl-loop repeat (+ rsvp-pad-left
+                             rsvp--min-focal-point-padding)
+                   do (insert " "))
+          (insert "|\n")
+          (insert rsvp--horizontal-line)
+          ;; apply face to word focal point
+          (if (null ov)
+              (progn ;; create overlay
+                (setq ov (make-overlay overlay-point
+                                       (1+ overlay-point)
+                                       buff))
+                (overlay-put ov 'face 'rsvp-focal-point-face))
+            ;; else, move existing overlay. range gets messed up when text is deleted
+            (move-overlay ov overlay-point (1+ overlay-point)))
+          ;; book keeping on index
+          (cl-incf i)
+          (when (>= i (length words))
+            (rsvp-stop-reader)))))))
 
 
 ;;;###autoload
@@ -213,7 +214,10 @@ Uses selected region if available, otherwise the entire buffer text."
     (rsvp-stop-reader))
 
   (let* ((txt (buffer-substring-no-properties start end))
-         (words (split-string txt))
+         (words-lst (split-string txt))
+         ;; convert list to array. array index access is faster. Performance
+         ;; may matter if you are reading with a small `rsvp-delay-seconds'.
+         (words (cl-coerce words-lst 'vector))
          (buff (get-buffer-create rsvp-buff-name)))
 
     ;; GUARD: there must be at least 1 word to display.
