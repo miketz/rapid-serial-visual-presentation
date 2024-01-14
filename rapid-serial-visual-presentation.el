@@ -8,21 +8,21 @@
 
 
 ;;; Commentary:
-;;; Speed reading tool. Display text 1 word at a time. Show the next word after
-;;; a delay. This is known as "rapid serial visual presentation" or RSVP
-;;; for short. The main idea is your eyes can focus in the same spot, more time
+;;; Speed reading tool.  Display text 1 word at a time.  Show the next word after
+;;; a delay.  This is known as "rapid serial visual presentation" or RSVP
+;;; for short.  The main idea is your eyes can focus in the same spot, more time
 ;;; spent absorbing words, less time moving your eyes left to right.
 ;;;
 ;;; This technique allows reading text on small screens without scrolling, as
 ;;; only 1 word needs to fit on the screen.
 ;;;
 ;;; In addition the words are aligned at a focal point, highlighted
-;;; in red, where you might most easily identify the word. Currently this point
-;;; is identified by a fake heuristic, not based on research. But the focal
+;;; in red, where you might most easily identify the word.  Currently this point
+;;; is identified by a fake heuristic, not based on research.  But the focal
 ;;; point may prove useful for you regardless.
 ;;;
-;;; Originally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
-;;; Emacs.
+;;; Originally made for _0x4aV on the Emacs channel of irc.libera.chat.
+;;; He was looking for an RSVP in Emacs.
 ;;;
 ;;; Requires Emacs 24.4 which will support:
 ;;;   - lexical binding
@@ -63,7 +63,7 @@
   :group 'tools)
 
 (defcustom rsvp-buff-name "*serial-reader*"
-  "Name of the output buffer"
+  "Name of the output buffer."
   :type 'string
   :group 'rapid-serial-visual-presentation)
 
@@ -89,7 +89,7 @@ Negative numbers will decrease font size which you probably don't want."
   :group 'rapid-serial-visual-presentation)
 (defcustom rsvp-pad-left 2
   "Space padding left of the text.
-Note there will already be default padding up to the focal point maker. This
+Note there will already be default padding up to the focal point maker.  This
 var is extra padding on top of that, so you may need to play around with this
 value until it looks how you like."
   :type 'integer
@@ -104,9 +104,9 @@ value until it looks how you like."
 
 ;; TODO: use real eye training data to find the ORP.
 (defun rsvp-optimal-recognition-point (word)
-  "Return a point (array index) of a word string.
+  "Return a point (array index) of a WORD string.
 Attempts to find the point where a user can most optimally recognize the word.
-This is just a fake heuristic for now. Not based on eye training data.
+This is just a fake heuristic for now.  Not based on eye training data.
 Near the middle for short words, a bit left of center (3rd of length) for
 larger words."
   ;; Focus roughly a 3rd of the way through the word.
@@ -125,7 +125,7 @@ larger words."
   (rsvp-optimal-recognition-point rsvp--longest-word))
 
 (define-minor-mode rapid-serial-visual-presentation-mode
-  "Minor mode to support key binds and kill-buffer-hook."
+  "Minor mode to support key binds and `kill-buffer-hook'."
   :lighter " serial-reader"
   ;; Ideally users should choose their own key binds. But it is important they
   ;; be able to STOP the serial reader easily. So I'm taking the liberty of
@@ -146,11 +146,13 @@ larger words."
 (defvar rsvp--rewind-fn nil)
 
 (defun rsvp--get-fns (buff words)
-  "Creates a list of funcs.
+  "Create a list of funcs.
+The funcs are a closure over BUFF and WORDS.
+
 The first fn draws output buffer text for a word.
 This fn will be invoked repeatedly via a timer.
 
-The second fn is a re-winder. Sets the index i backward then resumes drawing.
+The second fn is a re-winder.  Sets the index i backward then resumes drawing.
 
 Creates private variables:
   i: word list index
@@ -235,7 +237,8 @@ Creates private variables:
 (cl-defun rsvp-start-reader (&optional start end)
   "Entry point function.
 Display current buffer text 1 word at a time in new buffer `rsvp-buff-name'.
-Uses selected region if available, otherwise the entire buffer text."
+Fill START and END with the selected region if available, otherwise the entire
+buffer text."
 
   ;; NOTE: avoiding (interactive "r"). It breaks in the case where Emacs has
   ;; just started up with no mark set yet.
@@ -308,8 +311,8 @@ Call this if the serial display is taking too long."
 
 (defun rsvp-rewind-reader ()
   "Rewind feature.
-First pause the reader. Get count backwards from user. Then rewind reader index
-back by that amount."
+First pause the reader.  Get count backwards from user.  Then rewind reader
+index back by that amount."
   (interactive)
   ;; call the closure fn. it has secret private vars.
   (funcall rsvp--rewind-fn))
@@ -328,3 +331,5 @@ back by that amount."
 
 
 (provide 'rapid-serial-visual-presentation)
+
+;;; rapid-serial-visual-presentation.el ends here
