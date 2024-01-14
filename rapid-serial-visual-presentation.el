@@ -11,7 +11,7 @@
 ;;; Speed reading tool. Display text 1 word at a time. Show the next word after
 ;;; a delay. This is known as "rapid serial visual presentation" or RSVP
 ;;; for short. The main idea is your eyes can focus in the same spot, more time
-;;; spent abosorbing words, less time moving your eyes left to right.
+;;; spent absorbing words, less time moving your eyes left to right.
 ;;;
 ;;; This technique allows reading text on small screens without scrolling, as
 ;;; only 1 word needs to fit on the screen.
@@ -21,10 +21,10 @@
 ;;; is identified by a fake heuristic, not based on research. But the focal
 ;;; point may prove useful for you regardless.
 ;;;
-;;; Orignally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
+;;; Originally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
 ;;; Emacs.
 ;;;
-;;; Requres Emacs 24.1 or later for lexical binding.
+;;; Requires Emacs 24.1 or later for lexical binding.
 
 
 ;;; Installation:
@@ -94,7 +94,7 @@ Attempts to find the point where a user can most optimally recognize the word.
 This is just a fake heuristic for now. Not based on eye training data.
 Near the middle for short words, a bit left of center (3rd of length) for
 larger words."
-  ;; Focus rougly a 3rd of the way through the word.
+  ;; Focus roughly a 3rd of the way through the word.
   ;; Relies on integer truncation to get the index. Produces a center index
   ;; for short words.
   (/ (length word) 3))
@@ -135,7 +135,7 @@ larger words."
 The first fn draws output buffer text for a word.
 This fn will be invoked repeatedly via a timer.
 
-The second fn is a rewinder. Sets the index i backward then resumes drawing.
+The second fn is a re-winder. Sets the index i backward then resumes drawing.
 
 Creates private variables:
   i: word list index
@@ -154,7 +154,7 @@ Creates private variables:
                               rsvp--min-focal-point-padding)
                            ;; add extra 1 to fix it?
                            1))
-         ;; overlay for focal point. resuse this overlay for each word.
+         ;; overlay for focal point. reuse this overlay for each word.
          (ov nil))
     ;; This list of functions is the return value.
     (list
@@ -203,7 +203,7 @@ Creates private variables:
      (lambda ()
        (rsvp-stop-reader)
        (let ((cnt (read-number "rewind how many words? " 15)))
-         ;; Off by 1 issue? i think it's becuase by the time you call rewind
+         ;; Off by 1 issue? i think it's because by the time you call rewind
          ;; i has already been incremented. So increment cnt backwards to
          ;; compensate.
          (cl-incf cnt)
