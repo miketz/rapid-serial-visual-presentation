@@ -3,7 +3,7 @@
 Speed reading tool. Display text 1 word at a time. Show the next word after
 a delay. This is known as "rapid serial visual presentation" or RSVP
 for short. The main idea is your eyes can focus in the same spot, with more
-time spent abosorbing words, less time moving your eyes left to right.
+time spent absorbing words, less time moving your eyes left to right.
 
 This technique allows reading text on small screens without scrolling, as
 only 1 word needs to fit on the screen.
@@ -13,12 +13,12 @@ in red, where you might most easily identify the word. Currently this point
 is identified by a fake heuristic, not based on research. But the focal
 point may prove useful for you regardless.
 
-Orignally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
+Originally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
 Emacs.
 
 # Installation
 
-Requres Emacs 24.1 or later for lexical binding.
+Requires Emacs 24.1 or later for lexical binding.
 
 Place **rapid-serial-visual-presentation.el** in **/your/chosen/folder**.
 
