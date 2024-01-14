@@ -268,6 +268,22 @@ Call this if the serial display is taking too long."
     ;; else
     (message "serial reader was already stopped.")))
 
+(defun rsvp-pause-reader ()
+  "Pause the display of text."
+  ;; for now this is the same thing as stopping.
+  (rsvp-stop-reader))
+
+(defun rsvp-rewind-reader ()
+  "Rewind feature.
+First pause the reader. Get count backwards from user. Then rewind reader index
+back by that amount."
+  (interactive)
+  (rsvp-pause-reader)
+  (let ((cnt (read-number "rewind how many words? " 15)))
+    ;; (if (< i cnt)
+    ;;     (setq i 0)
+    ;;   (setq i (- i cnt)))
+    (print cnt)))
 
 ;; use a hook to cancel the timer if output buffer is killed
 (add-hook 'rapid-serial-visual-presentation-mode-hook
