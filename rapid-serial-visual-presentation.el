@@ -49,7 +49,6 @@
 
 ;;; TODO: centered view option? something like darkroom-mode? look into how to handle
 ;;;       width/height with regards to font scaling.
-;;; TODO: pause and rewind
 
 ;;; Code:
 (require 'cl-lib)
