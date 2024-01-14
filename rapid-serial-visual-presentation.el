@@ -10,7 +10,13 @@
 ;;; Commentary:
 ;;; Speed reading tool. Display text 1 word at a time. Show the next word after
 ;;; a delay. This is known as "rapid serial visual presentation" or RSVP
-;;; for short.
+;;; for short. The main idea is your eyes can focus in the same spot, more time
+;;; spent abosorbing words, less time moving your eyes left to right.
+
+;;; In addition the words are aligned at a focal point, highlighted
+;;; in red, where you might most easily identify the word. Currently this point
+;;; is identified by a fake heuristic, not based on research. But the focal
+;;; point may prove useful for you regardless.
 ;;;
 ;;; Orignally made for _0x4aV on #emacs IRC. He was looking for an RSVP in
 ;;; Emacs.
@@ -39,6 +45,7 @@
 
 ;;; TODO: centered view option? something like darkroom-mode? look into how to handle
 ;;;       width/height with regards to font scaling.
+;;; TODO: pause and rewind
 
 ;;; Code:
 (require 'cl-lib)
@@ -58,16 +65,40 @@ Negative numbers will decrease font size which you probably don't want.")
 ;; and `window-width', these functions do not account for font scaling.
 (defvar rsvp-pad-above 5
   "New line padding above the text.")
-(defvar rsvp-pad-left 10
-  "Space padding left of the text.")
+(defvar rsvp-pad-left 2
+  "Space padding left of the text.
+Note there will already be default minimum padding added up to the focal point
+of each word. This is extra padding on top of that, so you may need to play
+around with this value until it looks how you like.")
 
-;; TODO: use this face.
+;; TODO: use this face at the word's focal point.
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
   "Face for the word focal point of the word."
   :group 'mode-on-region)
 
-(defvar rsvp--timer nil)
+
+
+;; TODO: use real eye training data to find the ORP.
+(defun rsvp-optimal-recognition-point (word)
+  "Return a point (array index) of a word string.
+Attempts to find the point where a user can most optimally recognize the word.
+This is just a fake heuristic for now. Not based on eye training data.
+Near the middle for short words, a bit left of center (3rd of length) for
+larger words."
+  ;; Focus rougly a 3rd of the way through the word.
+  ;; Relies on integer truncation to get the index. Produces a center index
+  ;; for short words.
+  (/ (length word) 3))
+
+;; We must ensure the focal point display has enough padding for the part of
+;; the word left of focal point to fit on the screen. Use the longest possible
+;; word to calculate minimum padding.
+(defconst rsvp--longest-word "pneumonoultramicroscopicsilicovolcanoconiosis"
+  "Longest word in English.")
+
+(defconst rsvp--min-focal-point-padding
+  (rsvp-optimal-recognition-point rsvp--longest-word))
 
 (define-minor-mode rapid-serial-visual-presentation-mode
   "Minor mode to support key binds and kill-buffer-hook."
@@ -79,6 +110,10 @@ Negative numbers will decrease font size which you probably don't want.")
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "C-c q") #'rsvp-stop-reader)
             map))
+
+
+;; The only timer. Only 1 serial reader may be running at any time.
+(defvar rsvp--timer nil)
 
 ;;;###autoload
 (cl-defun rsvp-start-reader (&optional start end)
@@ -133,9 +168,27 @@ Uses selected region if available, otherwise the entire buffer text."
                           (erase-buffer)
                           ;; add padding
                           (cl-loop repeat rsvp-pad-above do (insert "\n"))
-                          (cl-loop repeat rsvp-pad-left do (insert " "))
-                          ;; insert word
-                          (insert (nth i words))
+                          (cl-loop repeat (- (window-width) 2) do (insert "-"))
+                          (insert "\n")
+                          (cl-loop repeat (+ rsvp-pad-left
+                                             rsvp--min-focal-point-padding)
+                                   do (insert " "))
+                          (insert "|\n")
+                          (let* ((orp (rsvp-optimal-recognition-point (nth i words)))
+                                 (padding (- rsvp--min-focal-point-padding orp)))
+                            ;; insert spaces to line up orp with the |
+                            (cl-loop repeat (+ rsvp-pad-left
+                                               padding)
+                                     do (insert " "))
+                            ;; insert word
+                            (insert (nth i words)))
+                          (insert "\n")
+                          (cl-loop repeat (+ rsvp-pad-left
+                                             rsvp--min-focal-point-padding)
+                                   do (insert " "))
+                          (insert "|\n")
+                          (cl-loop repeat (- (window-width) 2) do (insert "-"))
+                          (insert "\n")
                           ;; book keeping on index
                           (cl-incf i)
                           (when (>= i (length words))
