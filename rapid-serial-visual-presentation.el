@@ -34,8 +34,7 @@
 ;;; (setq rsvp-pad-above 5
 ;;;       rsvp-pad-left 10)
 ;;; (custom-set-faces `(rsvp-focal-point-face ((t :foreground "red"))))
-;;; ;; Sample key binds for vanilla Emacs.  Press "C-c r" with text
-;;; ;; highlighted (or not for full buffer text).
+;;; ;; Sample key binds.  Press "C-c r" with text highlighted (or not for full buffer text).
 ;;; (global-set-key (kbd "C-c r") #'rsvp-start-reader)
 ;;; (with-eval-after-load 'rapid-serial-visual-presentation
 ;;;   ;; Recommended key binds for the output buffer.
