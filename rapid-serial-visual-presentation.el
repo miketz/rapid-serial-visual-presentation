@@ -66,9 +66,9 @@ Negative numbers will decrease font size which you probably don't want.")
   "New line padding above the text.")
 (defvar rsvp-pad-left 2
   "Space padding left of the text.
-Note there will already be default minimum padding added up to the focal point
-of each word. This is extra padding on top of that, so you may need to play
-around with this value until it looks how you like.")
+Note there will already be default padding up to the focal point maker. This
+var is extra padding on top of that, so you may need to play around with this
+value until it looks how you like.")
 
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
