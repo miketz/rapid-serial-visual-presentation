@@ -118,6 +118,7 @@ larger words."
   ;; header of the output buffer.
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "C-c q") #'rsvp-stop-reader)
+            (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
             map))
 
 
@@ -126,13 +127,15 @@ larger words."
 
 (defvar rsvp--horizontal-line "---------------------------------------------\n")
 
+(defvar rsvp--draw-fn nil)
+(defvar rsvp--rewind-fn nil)
 
-(defun rsvp--get-draw-fn (buff words)
-  "Creates a fn to draw output buffer text for a word.
+(defun rsvp--get-fns (buff words)
+  "Creates a list of funcs.
+The first fn draws output buffer text for a word.
 This fn will be invoked repeatedly via a timer.
 
-Returns a closure fn. The point of the closure is to make private variables,
-avoiding global defvars that users may mess with.
+The second fn is a rewinder. Sets the index i backward then resumes drawing.
 
 Creates private variables:
   i: word list index
@@ -153,47 +156,64 @@ Creates private variables:
                            1))
          ;; overlay for focal point. resuse this overlay for each word.
          (ov nil))
-    ;; This function is the return value.
-    (lambda ()
-      ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
-      ;; for each word. But works OK for now.
-      (let ((word (aref words i)))
-        (with-current-buffer buff
-          (erase-buffer)
-          ;; add padding
-          (cl-loop repeat rsvp-pad-above do (insert "\n"))
-          (insert rsvp--horizontal-line)
-          (cl-loop repeat (+ rsvp-pad-left
-                             rsvp--min-focal-point-padding)
-                   do (insert " "))
-          (insert "|\n")
-          (let* ((orp (rsvp-optimal-recognition-point word))
-                 (orp-padding (- rsvp--min-focal-point-padding orp)))
-            ;; insert spaces to line up orp with the |
-            (cl-loop repeat (+ rsvp-pad-left
-                               orp-padding)
-                     do (insert " "))
-            ;; insert word
-            (insert word))
-          (insert "\n")
-          (cl-loop repeat (+ rsvp-pad-left
-                             rsvp--min-focal-point-padding)
-                   do (insert " "))
-          (insert "|\n")
-          (insert rsvp--horizontal-line)
-          ;; apply face to word focal point
-          (if (null ov)
-              (progn ;; create overlay
-                (setq ov (make-overlay overlay-point
-                                       (1+ overlay-point)
-                                       buff))
-                (overlay-put ov 'face 'rsvp-focal-point-face))
-            ;; else, move existing overlay. range gets messed up when text is deleted
-            (move-overlay ov overlay-point (1+ overlay-point)))
-          ;; book keeping on index
-          (cl-incf i)
-          (when (>= i (length words))
-            (rsvp-stop-reader)))))))
+    ;; This list of functions is the return value.
+    (list
+     ;; drawing fn. will be run every `rsvp-delay-seconds'.
+     (lambda ()
+       ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
+       ;; for each word. But works OK for now.
+       (let ((word (aref words i)))
+         (with-current-buffer buff
+           (erase-buffer)
+           ;; add padding
+           (cl-loop repeat rsvp-pad-above do (insert "\n"))
+           (insert rsvp--horizontal-line)
+           (cl-loop repeat (+ rsvp-pad-left
+                              rsvp--min-focal-point-padding)
+                    do (insert " "))
+           (insert "|\n")
+           (let* ((orp (rsvp-optimal-recognition-point word))
+                  (orp-padding (- rsvp--min-focal-point-padding orp)))
+             ;; insert spaces to line up orp with the |
+             (cl-loop repeat (+ rsvp-pad-left
+                                orp-padding)
+                      do (insert " "))
+             ;; insert word
+             (insert word))
+           (insert "\n")
+           (cl-loop repeat (+ rsvp-pad-left
+                              rsvp--min-focal-point-padding)
+                    do (insert " "))
+           (insert "|\n")
+           (insert rsvp--horizontal-line)
+           ;; apply face to word focal point
+           (if (null ov)
+               (progn ;; create overlay
+                 (setq ov (make-overlay overlay-point
+                                        (1+ overlay-point)
+                                        buff))
+                 (overlay-put ov 'face 'rsvp-focal-point-face))
+             ;; else, move existing overlay. range gets messed up when text is deleted
+             (move-overlay ov overlay-point (1+ overlay-point)))
+           ;; book keeping on index
+           (cl-incf i)
+           (when (>= i (length words))
+             (rsvp-stop-reader)))))
+     ;; rewind fn. run on user demand. rewinds the index i.
+     (lambda ()
+       (rsvp-stop-reader)
+       (let ((cnt (read-number "rewind how many words? " 15)))
+         ;; Off by 1 issue? i think it's becuase by the time you call rewind
+         ;; i has already been incremented. So increment cnt backwards to
+         ;; compensate.
+         (cl-incf cnt)
+         (if (< i cnt)
+             (setq i 0) ;; avoid negative numbers
+           (setq i (- i cnt)))
+         ;; start display again with new i value
+         (setq rsvp--timer
+               (run-with-timer 0 rsvp-delay-seconds
+                               rsvp--draw-fn)))))))
 
 
 ;;;###autoload
@@ -245,13 +265,15 @@ Uses selected region if available, otherwise the entire buffer text."
       ;; add a fancy header to the buffer. With info on how to abort.
       (set (make-local-variable 'header-line-format)
            (substitute-command-keys
-            "serial reader     [Abort]: \\[rsvp-stop-reader]")))
+            "[Stop]: \\[rsvp-stop-reader]  [Rewind]: \\[rsvp-rewind-reader]")))
 
-
+    (let ((funcs (rsvp--get-fns buff words)))
+      (setq rsvp--draw-fn (cl-first funcs))
+      (setq rsvp--rewind-fn (cl-second funcs)))
     ;; show a word every `rsvp-delay-seconds' via a timer.
     (setq rsvp--timer
           (run-with-timer 0 rsvp-delay-seconds
-                          (rsvp--get-draw-fn buff words)))))
+                          rsvp--draw-fn))))
 
 
 (defun rsvp-stop-reader ()
@@ -268,22 +290,14 @@ Call this if the serial display is taking too long."
     ;; else
     (message "serial reader was already stopped.")))
 
-(defun rsvp-pause-reader ()
-  "Pause the display of text."
-  ;; for now this is the same thing as stopping.
-  (rsvp-stop-reader))
 
 (defun rsvp-rewind-reader ()
   "Rewind feature.
 First pause the reader. Get count backwards from user. Then rewind reader index
 back by that amount."
   (interactive)
-  (rsvp-pause-reader)
-  (let ((cnt (read-number "rewind how many words? " 15)))
-    ;; (if (< i cnt)
-    ;;     (setq i 0)
-    ;;   (setq i (- i cnt)))
-    (print cnt)))
+  ;; call the closure fn. it has secret private vars.
+  (funcall rsvp--rewind-fn))
 
 ;; use a hook to cancel the timer if output buffer is killed
 (add-hook 'rapid-serial-visual-presentation-mode-hook
