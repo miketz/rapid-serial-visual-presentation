@@ -161,52 +161,53 @@ Uses selected region if available, otherwise the entire buffer text."
 
 
     ;; show a word every `rsvp-delay-seconds' via a timer.
-    (setq rsvp--timer (run-with-timer
-                    0 rsvp-delay-seconds
-                    (let ((i 0) ; word list index
-                          ;; where to apply the focal point face
-                          (overlay-point (+ rsvp-pad-above
-                                            ;; includes newline
-                                            (length rsvp--horizontal-line)
-                                            (+ rsvp-pad-left
-                                               rsvp--min-focal-point-padding)
-                                            ;; 2 for the pipe | and newline
-                                            2
-                                            (+ rsvp-pad-left
-                                               rsvp--min-focal-point-padding)
-                                            ;; add extra 1 to fix it?
-                                            1)))
-                      (lambda ()
-                        (with-current-buffer buff
-                          (erase-buffer)
-                          ;; add padding
-                          (cl-loop repeat rsvp-pad-above do (insert "\n"))
-                          (insert rsvp--horizontal-line)
-                          (cl-loop repeat (+ rsvp-pad-left
-                                             rsvp--min-focal-point-padding)
-                                   do (insert " "))
-                          (insert "|\n")
-                          (let* ((orp (rsvp-optimal-recognition-point (nth i words)))
-                                 (padding (- rsvp--min-focal-point-padding orp)))
-                            ;; insert spaces to line up orp with the |
-                            (cl-loop repeat (+ rsvp-pad-left
-                                               padding)
-                                     do (insert " "))
-                            ;; insert word
-                            (insert (nth i words)))
-                          (insert "\n")
-                          (cl-loop repeat (+ rsvp-pad-left
-                                             rsvp--min-focal-point-padding)
-                                   do (insert " "))
-                          (insert "|\n")
-                          (insert rsvp--horizontal-line)
-                          ;; apply face to word focal point
-                          (let ((ov (make-overlay overlay-point (1+ overlay-point))))
-                            (overlay-put ov 'face 'rsvp-focal-point-face))
-                          ;; book keeping on index
-                          (cl-incf i)
-                          (when (>= i (length words))
-                            (rsvp-stop-reader)))))))))
+    (setq rsvp--timer
+          (run-with-timer
+           0 rsvp-delay-seconds
+           (let ((i 0) ;; word list index
+                 ;; where to apply the focal point face
+                 (overlay-point (+ rsvp-pad-above
+                                   ;; includes newline
+                                   (length rsvp--horizontal-line)
+                                   (+ rsvp-pad-left
+                                      rsvp--min-focal-point-padding)
+                                   ;; 2 for the pipe | and newline
+                                   2
+                                   (+ rsvp-pad-left
+                                      rsvp--min-focal-point-padding)
+                                   ;; add extra 1 to fix it?
+                                   1)))
+             (lambda ()
+               (with-current-buffer buff
+                 (erase-buffer)
+                 ;; add padding
+                 (cl-loop repeat rsvp-pad-above do (insert "\n"))
+                 (insert rsvp--horizontal-line)
+                 (cl-loop repeat (+ rsvp-pad-left
+                                    rsvp--min-focal-point-padding)
+                          do (insert " "))
+                 (insert "|\n")
+                 (let* ((orp (rsvp-optimal-recognition-point (nth i words)))
+                        (padding (- rsvp--min-focal-point-padding orp)))
+                   ;; insert spaces to line up orp with the |
+                   (cl-loop repeat (+ rsvp-pad-left
+                                      padding)
+                            do (insert " "))
+                   ;; insert word
+                   (insert (nth i words)))
+                 (insert "\n")
+                 (cl-loop repeat (+ rsvp-pad-left
+                                    rsvp--min-focal-point-padding)
+                          do (insert " "))
+                 (insert "|\n")
+                 (insert rsvp--horizontal-line)
+                 ;; apply face to word focal point
+                 (let ((ov (make-overlay overlay-point (1+ overlay-point))))
+                   (overlay-put ov 'face 'rsvp-focal-point-face))
+                 ;; book keeping on index
+                 (cl-incf i)
+                 (when (>= i (length words))
+                   (rsvp-stop-reader)))))))))
 
 
 (defun rsvp-stop-reader ()
