@@ -136,7 +136,6 @@ Uses selected region if available, otherwise the entire buffer text."
   (unless (null rsvp--timer)
     (rsvp-stop-reader))
 
-  ;; TODO: find a way to get the words as a "stream" instead of a giant list
   (let* ((txt (buffer-substring-no-properties start end))
          (words (split-string txt))
          (buff (get-buffer-create rsvp-buff-name)))
