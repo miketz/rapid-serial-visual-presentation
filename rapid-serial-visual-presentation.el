@@ -51,7 +51,7 @@
 
 (defvar rsvp-buff-name "*serial-reader*")
 
-(defvar rsvp-delay-seconds 0.4)
+(defvar rsvp-delay-seconds 0.3)
 
 (defvar rsvp-font-scale-level 4
   "Number of steps to scale font size.
