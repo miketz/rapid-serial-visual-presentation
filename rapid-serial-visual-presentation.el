@@ -49,6 +49,11 @@
 ;;; Code:
 (require 'cl-lib)
 
+(defgroup rapid-serial-visual-presentation nil
+  "Speed reading display technique."
+  :prefix "rsvp-"
+  :group 'tools)
+
 (defvar rsvp-buff-name "*serial-reader*")
 
 (defvar rsvp-delay-seconds 0.3)
@@ -73,7 +78,7 @@ value until it looks how you like.")
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
   "Face for the focal point character of a word."
-  :group 'mode-on-region)
+  :group 'rapid-serial-visual-presentation)
 
 
 
