@@ -114,7 +114,7 @@ larger words."
 ;; The only timer. Only 1 serial reader may be running at any time.
 (defvar rsvp--timer nil)
 
-(defvar rsvp--horizontal-line "--------------------------------------------------\n")
+(defvar rsvp--horizontal-line "---------------------------------------------\n")
 
 ;;;###autoload
 (cl-defun rsvp-start-reader (&optional start end)
