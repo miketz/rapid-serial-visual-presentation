@@ -72,7 +72,7 @@ value until it looks how you like.")
 
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
-  "Face for the word focal point of the word."
+  "Face for the focal point character of a word."
   :group 'mode-on-region)
 
 
