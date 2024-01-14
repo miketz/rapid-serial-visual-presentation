@@ -126,6 +126,7 @@ larger words."
 
 (defun rsvp--get-draw-fn (buff words)
   "Creates a fn to draw output buffer text for a word.
+This fn will be invoked repeatedly via a timer.
 
 Returns a closure fn. The point of the closure is to make private variables,
 avoiding global defvars that users may mess with.
@@ -151,6 +152,8 @@ Creates private variables:
          (ov nil))
     ;; This function is the return value.
     (lambda ()
+      ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
+      ;; for each word. But works OK for now.
       (with-current-buffer buff
         (erase-buffer)
         ;; add padding
@@ -161,10 +164,10 @@ Creates private variables:
                  do (insert " "))
         (insert "|\n")
         (let* ((orp (rsvp-optimal-recognition-point (nth i words)))
-               (padding (- rsvp--min-focal-point-padding orp)))
+               (orp-padding (- rsvp--min-focal-point-padding orp)))
           ;; insert spaces to line up orp with the |
           (cl-loop repeat (+ rsvp-pad-left
-                             padding)
+                             orp-padding)
                    do (insert " "))
           ;; insert word
           (insert (nth i words)))
