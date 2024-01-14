@@ -4,7 +4,7 @@
 
 ;;; Package-Requires: ((emacs "24.1"))
 ;;; Version: 0.1.0
-;;; URL: TODO
+;;; URL: https://github.com/miketz/rapid-serial-visual-presentation
 
 
 ;;; Commentary:
