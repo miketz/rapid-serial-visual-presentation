@@ -70,7 +70,6 @@ Note there will already be default minimum padding added up to the focal point
 of each word. This is extra padding on top of that, so you may need to play
 around with this value until it looks how you like.")
 
-;; TODO: use this face at the word's focal point.
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
   "Face for the word focal point of the word."
@@ -92,7 +91,8 @@ larger words."
 
 ;; We must ensure the focal point display has enough padding for the part of
 ;; the word left of focal point to fit on the screen. Use the longest possible
-;; word to calculate minimum padding.
+;; word to calculate minimum padding. Also it looks good to some default padding
+;; anyway.
 (defconst rsvp--longest-word "pneumonoultramicroscopicsilicovolcanoconiosis"
   "Longest word in English.")
 
@@ -113,6 +113,8 @@ larger words."
 
 ;; The only timer. Only 1 serial reader may be running at any time.
 (defvar rsvp--timer nil)
+
+(defvar rsvp--horizontal-line "--------------------------------------------------\n")
 
 ;;;###autoload
 (cl-defun rsvp-start-reader (&optional start end)
@@ -158,17 +160,29 @@ Uses selected region if available, otherwise the entire buffer text."
            (substitute-command-keys
             "serial reader     [Abort]: \\[rsvp-stop-reader]")))
 
+
     ;; show a word every `rsvp-delay-seconds' via a timer.
     (setq rsvp--timer (run-with-timer
                     0 rsvp-delay-seconds
-                    (let ((i 0))
+                    (let ((i 0) ; word list index
+                          ;; where to apply the focal point face
+                          (overlay-point (+ rsvp-pad-above
+                                            ;; includes newline
+                                            (length rsvp--horizontal-line)
+                                            (+ rsvp-pad-left
+                                               rsvp--min-focal-point-padding)
+                                            ;; 2 for the pipe | and newline
+                                            2
+                                            (+ rsvp-pad-left
+                                               rsvp--min-focal-point-padding)
+                                            ;; add extra 1 to fix it?
+                                            1)))
                       (lambda ()
                         (with-current-buffer buff
                           (erase-buffer)
                           ;; add padding
                           (cl-loop repeat rsvp-pad-above do (insert "\n"))
-                          (cl-loop repeat (- (window-width) 2) do (insert "-"))
-                          (insert "\n")
+                          (insert rsvp--horizontal-line)
                           (cl-loop repeat (+ rsvp-pad-left
                                              rsvp--min-focal-point-padding)
                                    do (insert " "))
@@ -186,8 +200,10 @@ Uses selected region if available, otherwise the entire buffer text."
                                              rsvp--min-focal-point-padding)
                                    do (insert " "))
                           (insert "|\n")
-                          (cl-loop repeat (- (window-width) 2) do (insert "-"))
-                          (insert "\n")
+                          (insert rsvp--horizontal-line)
+                          ;; apply face to word focal point
+                          (let ((ov (make-overlay overlay-point (1+ overlay-point))))
+                            (overlay-put ov 'face 'rsvp-focal-point-face))
                           ;; book keeping on index
                           (cl-incf i)
                           (when (>= i (length words))
