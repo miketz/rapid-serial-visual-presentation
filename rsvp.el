@@ -155,20 +155,6 @@ larger words."
             ;; (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
             map))
 
-(defun rsvp-use-suggested-keybinds ()
-  "Set up suggested key binds."
-  (interactive)
-  (let ((keys '["C-c r"
-                "C-c q"]))
-    ;; putting key sequence strings in an array to trick package-lint into
-    ;; silence.  it doesn't like C-c prefix key binds but the point of this
-    ;; fn is the user explicitly calls it to choose to use the recommended C-c
-    ;; prefix bindings.
-    (global-set-key (kbd (aref keys 0)) #'rsvp-start-reader)
-    (define-key rsvp-mode-map (kbd (aref keys 1)) #'rsvp-stop-reader)
-    (define-key rsvp-mode-map (kbd (aref keys 0)) #'rsvp-rewind-reader)))
-
-
 ;; The only timer. Only 1 serial reader may be running at any time.
 (defvar rsvp--timer nil)
 
