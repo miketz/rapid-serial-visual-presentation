@@ -247,14 +247,7 @@ Creates private variables:
              (setq i 0) ;; avoid negative numbers
            (setq i (- i cnt)))
 
-         ;; initially draw an epty focal point box.  Gives user time to focus
-         ;; their eye on the target before the display starts.
-         (rsvp--draw-empty-focal-point-box buff)
-         ;; start display again with new i value
-         (setq rsvp--timer
-               (run-with-timer rsvp-initial-delay-seconds
-                               rsvp-delay-seconds
-                               rsvp--draw-fn)))))))
+         (rsvp--draw buff))))))
 
 
 (defun rsvp--draw-empty-focal-point-box (buff)
@@ -333,14 +326,18 @@ buffer text."
     (let ((funcs (rsvp--get-fns buff words)))
       (setq rsvp--draw-fn (cl-first funcs))
       (setq rsvp--rewind-fn (cl-second funcs)))
-    ;; initially draw an epty focal point box.  Gives user time to focus
-    ;; their eye on the target before the display starts.
-    (rsvp--draw-empty-focal-point-box buff)
-    ;; show a word every `rsvp-delay-seconds' via a timer.
-    (setq rsvp--timer
-          (run-with-timer rsvp-initial-delay-seconds
-                          rsvp-delay-seconds
-                          rsvp--draw-fn))))
+    (rsvp--draw buff)))
+
+(defun rsvp--draw (buff)
+  "Start the drawing into BUFF."
+  ;; initially draw an epty focal point box.  Gives user time to focus
+  ;; their eye on the target before the display starts.
+  (rsvp--draw-empty-focal-point-box buff)
+  ;; show a word every `rsvp-delay-seconds' via a timer.
+  (setq rsvp--timer
+        (run-with-timer rsvp-initial-delay-seconds
+                        rsvp-delay-seconds
+                        rsvp--draw-fn)))
 
 
 (defun rsvp-stop-reader ()
