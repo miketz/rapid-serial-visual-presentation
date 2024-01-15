@@ -35,7 +35,7 @@ Add the following text to your .emacs or init.el file:
 (autoload #'rsvp-start-reader "rsvp" nil t)
 ;; Config vars
 (setq rsvp-delay-seconds 0.4)
-(setq rsvp-initial-delay-seconds 0.8)
+(setq rsvp-initial-delay-seconds 0.5)
 (setq rsvp-font-scale-level 3)
 (setq rsvp-pad-above 5
       rsvp-pad-left  2)
@@ -46,10 +46,10 @@ Add the following text to your .emacs or init.el file:
 (global-set-key (kbd "C-c r") #'rsvp-start-reader)
 (with-eval-after-load 'rsvp
   ;; Sample key binds for the output buffer.
-  (define-key rsvp-mode-map (kbd "q") #'rsvp-stop-reader)
+  (define-key rsvp-mode-map (kbd "<SPC>") #'rsvp-toggle-start-stop)
   (define-key rsvp-mode-map (kbd "r") #'rsvp-rewind-reader)
   ;; Sample evil key binds
   (with-eval-after-load 'evil
-    (define-key evil-normal-state-map (kbd "q") #'rsvp-stop-reader)
+    (define-key evil-normal-state-map (kbd "<SPC>") #'rsvp-toggle-start-stop)
     (define-key evil-normal-state-map (kbd "r") #'rsvp-rewind-reader)))
 ```
