@@ -49,8 +49,13 @@
 ;;; (global-set-key (kbd "C-c r") #'rsvp-start-reader)
 ;;; (with-eval-after-load 'rsvp
 ;;;   ;; Sample key binds for the output buffer.
-;;;   (define-key rsvp-mode-map (kbd "C-c q") #'rsvp-stop-reader)
-;;;   (define-key rsvp-mode-map (kbd "C-c r") #'rsvp-rewind-reader))
+;;;   (define-key rsvp-mode-map (kbd "q") #'rsvp-stop-reader)
+;;;   (define-key rsvp-mode-map (kbd "r") #'rsvp-rewind-reader)
+;;;   ;; Sample evil key binds
+;;;   (with-eval-after-load 'evil
+;;;     (define-key evil-normal-state-map (kbd "q") #'rsvp-stop-reader)
+;;;     (define-key evil-normal-state-map (kbd "r") #'rsvp-rewind-reader)))
+
 
 
 ;;; TODO: centered view option? something like darkroom-mode? look into how to handle
@@ -150,9 +155,8 @@ larger words."
   "Minor mode to support key binds and `kill-buffer-hook'."
   :lighter " rsvp"
   :keymap (let ((map (make-sparse-keymap)))
-            ;; No default bindings for now. User will choose them.
-            ;; (define-key map (kbd "C-c q") #'rsvp-stop-reader)
-            ;; (define-key map (kbd "C-c r") #'rsvp-rewind-reader)
+            (define-key map (kbd "q") #'rsvp-stop-reader)
+            (define-key map (kbd "r") #'rsvp-rewind-reader)
             map))
 
 ;; The only timer. Only 1 serial reader may be running at any time.

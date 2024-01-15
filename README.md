@@ -46,6 +46,10 @@ Add the following text to your .emacs or init.el file:
 (global-set-key (kbd "C-c r") #'rsvp-start-reader)
 (with-eval-after-load 'rsvp
   ;; Sample key binds for the output buffer.
-  (define-key rsvp-mode-map (kbd "C-c q") #'rsvp-stop-reader)
-  (define-key rsvp-mode-map (kbd "C-c r") #'rsvp-rewind-reader))
+  (define-key rsvp-mode-map (kbd "q") #'rsvp-stop-reader)
+  (define-key rsvp-mode-map (kbd "r") #'rsvp-rewind-reader)
+  ;; Sample evil key binds
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "q") #'rsvp-stop-reader)
+    (define-key evil-normal-state-map (kbd "r") #'rsvp-rewind-reader)))
 ```
