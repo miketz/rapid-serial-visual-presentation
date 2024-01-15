@@ -79,7 +79,7 @@
   :type 'number
   :group 'rsvp)
 
-(defcustom rsvp-initial-delay-seconds 0.8
+(defcustom rsvp-initial-delay-seconds 0.5
   "Delay in seconds before starting the display stream.
 This gives you time to move your eye to the focal point before the display
 starts.  Otherwise you would likely miss a few words before your eyes even
