@@ -113,7 +113,7 @@ These words could be skipped for even faster reading."
   :group 'rsvp)
 
 (defcustom rsvp-skip-words-p nil
-  "When non-nil skip over words in `rsvp-skip-words'"
+  "When non-nil skip over words in `rsvp-skip-words'."
   :type 'boolean
   :group 'rsvp)
 
