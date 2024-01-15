@@ -42,6 +42,7 @@
 ;;; (setq rsvp-font-scale-level 3)
 ;;; (setq rsvp-pad-above 5
 ;;;       rsvp-pad-left 2)
+;;; (setq rsvp-skip-words-p nil)
 ;;; (custom-set-faces `(rsvp-focal-point-face ((t :foreground "red"))))
 ;;; ;; Sample key binds.
 ;;; ;; Press "C-c r" with text highlighted (or not for full buffer text).
@@ -102,6 +103,18 @@ Note there will already be default padding up to the focal point maker.  This
 var is extra padding on top of that, so you may need to play around with this
 value until it looks how you like."
   :type 'integer
+  :group 'rsvp)
+
+
+(defcustom rsvp-skip-words '("the" "a" "an")
+  "Words not needed to get the meaning of a sentence.
+These words could be skipped for even faster reading."
+  :type 'list
+  :group 'rsvp)
+
+(defcustom rsvp-skip-words-p nil
+  "When non-nil skip over words in `rsvp-skip-words'"
+  :type 'boolean
   :group 'rsvp)
 
 (defface rsvp-focal-point-face
@@ -298,6 +311,12 @@ buffer text."
          ;; may matter if you are reading with a small `rsvp-delay-seconds'.
          (words (cl-coerce words-lst 'vector))
          (buff (get-buffer-create rsvp-buff-name)))
+
+    (when rsvp-skip-words-p
+      ;; strip out non-essential words
+      (setq words (cl-remove-if (lambda (w)
+                                  (cl-member w rsvp-skip-words :test #'string-equal))
+                                words)))
 
     ;; GUARD: there must be at least 1 word to display.
     (when (= (length words) 0)
