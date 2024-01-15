@@ -35,7 +35,7 @@ Add the following text to your .emacs or init.el file:
 (autoload #'rsvp-start-reader "rsvp" nil t)
 ;; Config vars
 (setq rsvp-delay-seconds 0.4)
-(setq rsvp-initial-delay-seconds 1.0)
+(setq rsvp-initial-delay-seconds 0.8)
 (setq rsvp-font-scale-level 3)
 (setq rsvp-pad-above 5
       rsvp-pad-left  2)

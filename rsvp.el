@@ -38,7 +38,7 @@
 ;;; (autoload #'rsvp-start-reader "rsvp" nil t)
 ;;; ;; Config vars
 ;;; (setq rsvp-delay-seconds 0.4)
-;;; (setq rsvp-initial-delay-seconds 1.0)
+;;; (setq rsvp-initial-delay-seconds 0.8)
 ;;; (setq rsvp-font-scale-level 3)
 ;;; (setq rsvp-pad-above 5
 ;;;       rsvp-pad-left 2)
@@ -74,7 +74,7 @@
   :type 'number
   :group 'rsvp)
 
-(defcustom rsvp-initial-delay-seconds 1.0
+(defcustom rsvp-initial-delay-seconds 0.8
   "Delay in seconds before starting the display stream.
 This gives you time to move your eye to the focal point before the display
 starts.  Otherwise you would likely miss a few words before your eyes even
