@@ -38,6 +38,7 @@
 ;;; (autoload #'rsvp-start-reader "rsvp" nil t)
 ;;; ;; Config vars
 ;;; (setq rsvp-delay-seconds 0.4)
+;;; (setq rsvp-initial-delay-seconds 1.0)
 ;;; (setq rsvp-font-scale-level 3)
 ;;; (setq rsvp-pad-above 5
 ;;;       rsvp-pad-left 2)
@@ -69,6 +70,14 @@
 
 (defcustom rsvp-delay-seconds 0.3
   "Delay in seconds until next word display."
+  :type 'number
+  :group 'rsvp)
+
+(defcustom rsvp-initial-delay-seconds 1.0
+  "Delay in seconds before starting the display stream.
+This gives you time to move your eye to the focal point before the display
+starts.  Otherwise you would likely miss a few words before your eyes even
+moved to the focal point."
   :type 'number
   :group 'rsvp)
 
@@ -237,11 +246,37 @@ Creates private variables:
          (if (< i cnt)
              (setq i 0) ;; avoid negative numbers
            (setq i (- i cnt)))
+
+         ;; initially draw an epty focal point box.  Gives user time to focus
+         ;; their eye on the target before the display starts.
+         (rsvp--draw-empty-focal-point-box buff)
          ;; start display again with new i value
          (setq rsvp--timer
-               (run-with-timer 0 rsvp-delay-seconds
+               (run-with-timer rsvp-initial-delay-seconds
+                               rsvp-delay-seconds
                                rsvp--draw-fn)))))))
 
+
+(defun rsvp--draw-empty-focal-point-box (buff)
+  "Draw an empty focal point box in BUFF.
+This is intented to be a temproary display for `rsvp-initial-delay-seconds'.
+Giving the user time to focus their eye on the focal point before the display
+starts."
+  (with-current-buffer buff
+    (erase-buffer)
+    ;; add padding
+    (cl-loop repeat rsvp-pad-above do (insert "\n"))
+    (insert rsvp--horizontal-line)
+    (cl-loop repeat (+ rsvp-pad-left
+                       rsvp--min-focal-point-padding)
+             do (insert " "))
+    (insert "|\n")
+    (insert "\n")
+    (cl-loop repeat (+ rsvp-pad-left
+                       rsvp--min-focal-point-padding)
+             do (insert " "))
+    (insert "|\n")
+    (insert rsvp--horizontal-line)))
 
 ;;;###autoload
 (cl-defun rsvp-start-reader (&optional start end)
@@ -298,9 +333,13 @@ buffer text."
     (let ((funcs (rsvp--get-fns buff words)))
       (setq rsvp--draw-fn (cl-first funcs))
       (setq rsvp--rewind-fn (cl-second funcs)))
+    ;; initially draw an epty focal point box.  Gives user time to focus
+    ;; their eye on the target before the display starts.
+    (rsvp--draw-empty-focal-point-box buff)
     ;; show a word every `rsvp-delay-seconds' via a timer.
     (setq rsvp--timer
-          (run-with-timer 0 rsvp-delay-seconds
+          (run-with-timer rsvp-initial-delay-seconds
+                          rsvp-delay-seconds
                           rsvp--draw-fn))))
 
 
