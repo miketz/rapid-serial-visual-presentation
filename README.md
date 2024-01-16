@@ -47,6 +47,7 @@ Add the following text to your .emacs or init.el file:
 (setq rsvp-pad-above 5
       rsvp-pad-left  2)
 (setq rsvp-skip-words-p nil)
+(setq rsvp-use-focal-point-face-p t)
 (custom-set-faces `(rsvp-focal-point-face ((t :foreground "red"))))
 ;; Sample key binds.
 ;; Press "C-c r" with text highlighted (or not for full buffer text).
