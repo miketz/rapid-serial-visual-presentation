@@ -10,7 +10,7 @@
 ;;; Commentary:
 ;;; Speed reading tool.  Display text 1 word at a time.  Show the next word after
 ;;; a delay.  This is known as "rapid serial visual presentation" or RSVP
-;;; for short.  The main idea is your eyes can focus in the same spot, more time
+;;; for short.  The main idea is your eyes can focus in the same spot.  More time
 ;;; spent absorbing words, less time moving your eyes left to right.
 ;;;
 ;;; This technique allows reading text on small screens without scrolling, as
