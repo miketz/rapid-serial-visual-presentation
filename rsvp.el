@@ -95,7 +95,7 @@ Set to 1.0 (100%) to double the delay."
   "Percentage of extra delay time at the end of a sentance.
 Set to 0 for no extra pause.
 Set to 1.0 (100%) to double the delay."
-  :type 'boolean :group 'rsvp)
+  :type 'number :group 'rsvp)
 
 
 
