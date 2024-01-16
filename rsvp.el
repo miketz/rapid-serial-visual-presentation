@@ -98,6 +98,9 @@ Set to 1.0 (100%) to double the delay."
   :type 'number :group 'rsvp)
 
 
+(defcustom rsvp-scale-delay-to-word-length-p t
+  "When non-nil delay more for longer words."
+  :type 'boolean :group 'rsvp)
 
 
 (defcustom rsvp-initial-delay-seconds 0.5
@@ -247,6 +250,19 @@ Creates private variables:
                           ;; increase delay
                           (* rsvp-delay-seconds
                              rsvp-pause-comma-%)))
+
+        ;; extra pause for longer words
+        (when rsvp-scale-delay-to-word-length-p
+          ;; for each 2 letter chunk after the first 5 letters, add a little delay.
+          ;; For now do not configure this as I want the freedom to change how
+          ;; it works without breaking configs.
+          (let ((chunks (/ (- (length word) 5)
+                           2)))
+            (when (> chunks 1)
+              (timer-inc-time rsvp--timer
+                              ;; increase delay 20% for each extra chunk
+                              (* (* rsvp-delay-seconds 0.20)
+                                 chunks)))))
 
         (with-current-buffer buff
           (erase-buffer)
