@@ -25,6 +25,11 @@ Requires Emacs 24.4 which will support:
 
 Place **rsvp.el** in **/your/chosen/folder**.
 
+Byte compile the file for a bit of extra performance.
+Open `rsvp.el' in an emacs buffer then
+
+    M-x byte-compile-file
+
 Add the following text to your .emacs or init.el file:
 
 ```lisp

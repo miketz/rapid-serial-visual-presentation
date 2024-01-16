@@ -32,6 +32,7 @@
 
 ;;; Installation:
 ;;; Place `rsvp.el' in `/your/chosen/folder'.
+;;; Open `rsvp.el' in an emacs buffer then M-x byte-compile-file
 ;;; Add the following text to your .emacs or init.el file:
 ;;;
 ;;; (push "/your/chosen/folder" load-path)
