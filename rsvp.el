@@ -81,7 +81,7 @@
 (defcustom rsvp-pause-comma-p t
   "When non-nil have extra delay at commas."
   :type 'boolean :group 'rsvp)
-(defcustom rsvp-pause-comma-% 0.4
+(defcustom rsvp-pause-comma-% 0.3
   "Percentage of extra delay time at commas.
 Set to 0 for no extra pause.
 Set to 1.0 (100%) to double the delay."
