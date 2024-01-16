@@ -400,7 +400,8 @@ buffer text."
     (rsvp--draw buff t)))
 
 (defun rsvp--draw (buff delayp)
-  "Start the drawing into BUFF."
+  "Start the drawing into BUFF.
+If DELAYP is non-nil, apply `rsvp-initial-delay-seconds'."
   ;; initially draw an epty focal point box.  Gives user time to focus
   ;; their eye on the target before the display starts.
   (rsvp--draw-empty-focal-point-box buff)
