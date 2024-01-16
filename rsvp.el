@@ -91,7 +91,7 @@ Set to 1.0 (100%) to double the delay."
 (defcustom rsvp-pause-end-of-sentence-p t
   "When non-nil have extra delay at the end of a sentance."
   :type 'boolean :group 'rsvp)
-(defcustom rsvp-pause-end-of-sentence-% 0.8
+(defcustom rsvp-pause-end-of-sentence-% 2.0
   "Percentage of extra delay time at the end of a sentance.
 Set to 0 for no extra pause.
 Set to 1.0 (100%) to double the delay."
