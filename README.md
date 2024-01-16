@@ -23,7 +23,7 @@ Requires Emacs 24.4.
 Place **rsvp.el** in **/your/chosen/folder**.
 
 Byte compile the file for a bit of extra performance.
-Open `rsvp.el' in an emacs buffer then
+Open **rsvp.el** in an Emacs buffer then type:
 
     M-x byte-compile-file
 
