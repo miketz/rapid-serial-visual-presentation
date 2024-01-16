@@ -78,6 +78,28 @@
   :type 'number
   :group 'rsvp)
 
+(defcustom rsvp-pause-comma-p t
+  "When non-nil have extra delay at commas."
+  :type 'boolean :group 'rsvp)
+(defcustom rsvp-pause-comma-% 0.4
+  "Percentage of extra delay time at commas.
+Set to 0 for no extra pause.
+Set to 1.0 (100%) to double the delay."
+  :type 'number :group 'rsvp)
+
+
+(defcustom rsvp-pause-end-of-sentence-p t
+  "When non-nil have extra delay at the end of a sentance."
+  :type 'boolean :group 'rsvp)
+(defcustom rsvp-pause-end-of-sentence-% 0.8
+  "Percentage of extra delay time at the end of a sentance.
+Set to 0 for no extra pause.
+Set to 1.0 (100%) to double the delay."
+  :type 'boolean :group 'rsvp)
+
+
+
+
 (defcustom rsvp-initial-delay-seconds 0.5
   "Delay in seconds before starting the display stream.
 This gives you time to move your eye to the focal point before the display
@@ -207,6 +229,25 @@ Creates private variables:
       ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
       ;; for each word. But works OK for now.
       (let ((word (aref words i)))
+
+        ;; extra pause at end of sentance.
+        (when (and rsvp-pause-end-of-sentence-p
+                   (or (string-suffix-p "." word)
+                       (string-suffix-p "?" word)
+                       (string-suffix-p "!" word)))
+          (timer-inc-time rsvp--timer
+                          ;; increase delay
+                          (* rsvp-delay-seconds
+                             rsvp-pause-end-of-sentence-%)))
+
+        ;; extra puase at comma
+        (when (and rsvp-pause-comma-p
+                   (string-suffix-p "," word))
+          (timer-inc-time rsvp--timer
+                          ;; increase delay
+                          (* rsvp-delay-seconds
+                             rsvp-pause-comma-%)))
+
         (with-current-buffer buff
           (erase-buffer)
           ;; add padding
