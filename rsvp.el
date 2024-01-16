@@ -10,7 +10,7 @@
 ;;; Commentary:
 ;;; Speed reading tool.  Display text 1 word at a time.  Show the next word after
 ;;; a delay.  This is known as "rapid serial visual presentation" or RSVP
-;;; for short.  The main idea is your eyes can focus in the same spot, more time
+;;; for short.  The main idea is your eyes can focus in the same spot.  More time
 ;;; spent absorbing words, less time moving your eyes left to right.
 ;;;
 ;;; This technique allows reading text on small screens without scrolling, as
@@ -77,6 +77,31 @@
   "Delay in seconds until next word display."
   :type 'number
   :group 'rsvp)
+
+(defcustom rsvp-pause-comma-p t
+  "When non-nil have extra delay at commas."
+  :type 'boolean :group 'rsvp)
+(defcustom rsvp-pause-comma-% 0.3
+  "Percentage of extra delay time at commas.
+Set to 0 for no extra pause.
+Set to 1.0 (100%) to double the delay."
+  :type 'number :group 'rsvp)
+
+
+(defcustom rsvp-pause-end-of-sentence-p t
+  "When non-nil have extra delay at the end of a sentance."
+  :type 'boolean :group 'rsvp)
+(defcustom rsvp-pause-end-of-sentence-% 2.0
+  "Percentage of extra delay time at the end of a sentance.
+Set to 0 for no extra pause.
+Set to 1.0 (100%) to double the delay."
+  :type 'number :group 'rsvp)
+
+
+(defcustom rsvp-scale-delay-to-word-length-p t
+  "When non-nil delay more for longer words."
+  :type 'boolean :group 'rsvp)
+
 
 (defcustom rsvp-initial-delay-seconds 0.5
   "Delay in seconds before starting the display stream.
@@ -207,6 +232,38 @@ Creates private variables:
       ;; Draw buffer text. It's a bit ham fisted, redrawing the entire buffer
       ;; for each word. But works OK for now.
       (let ((word (aref words i)))
+
+        ;; extra pause at end of sentance.
+        (when (and rsvp-pause-end-of-sentence-p
+                   (or (string-suffix-p "." word)
+                       (string-suffix-p "?" word)
+                       (string-suffix-p "!" word)))
+          (timer-inc-time rsvp--timer
+                          ;; increase delay
+                          (* rsvp-delay-seconds
+                             rsvp-pause-end-of-sentence-%)))
+
+        ;; extra puase at comma
+        (when (and rsvp-pause-comma-p
+                   (string-suffix-p "," word))
+          (timer-inc-time rsvp--timer
+                          ;; increase delay
+                          (* rsvp-delay-seconds
+                             rsvp-pause-comma-%)))
+
+        ;; extra pause for longer words
+        (when rsvp-scale-delay-to-word-length-p
+          ;; for each 2 letter chunk after the first 5 letters, add a little delay.
+          ;; For now do not configure this as I want the freedom to change how
+          ;; it works without breaking configs.
+          (let ((chunks (/ (- (length word) 5)
+                           2)))
+            (when (> chunks 1)
+              (timer-inc-time rsvp--timer
+                              ;; increase delay 20% for each extra chunk
+                              (* (* rsvp-delay-seconds 0.20)
+                                 chunks)))))
+
         (with-current-buffer buff
           (erase-buffer)
           ;; add padding
@@ -343,7 +400,8 @@ buffer text."
     (rsvp--draw buff t)))
 
 (defun rsvp--draw (buff delayp)
-  "Start the drawing into BUFF."
+  "Start the drawing into BUFF.
+If DELAYP is non-nil, apply `rsvp-initial-delay-seconds'."
   ;; initially draw an epty focal point box.  Gives user time to focus
   ;; their eye on the target before the display starts.
   (rsvp--draw-empty-focal-point-box buff)
