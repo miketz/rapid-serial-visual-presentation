@@ -152,6 +152,13 @@ These words could be skipped for even faster reading."
   :type 'boolean
   :group 'rsvp)
 
+
+(defcustom rsvp-use-focal-point-face-p t
+  "When non-nil apply `rsvp-focal-point-face' at the focal point of a word.
+This is configurable for those who prefer no face applied at all."
+  :type 'boolean
+  :group 'rsvp)
+
 (defface rsvp-focal-point-face
   '((t (:foreground "#FF0000")))
   "Face for the focal point character of a word."
@@ -293,15 +300,16 @@ Creates private variables:
                    do (insert " "))
           (insert "|\n")
           (insert rsvp--horizontal-line)
-          ;; apply face to word focal point
-          (if (null ov)
-              (progn ;; create overlay
-                (setq ov (make-overlay overlay-point
-                                       (1+ overlay-point)
-                                       buff))
-                (overlay-put ov 'face 'rsvp-focal-point-face))
-            ;; else, move existing overlay. range gets messed up when text is deleted
-            (move-overlay ov overlay-point (1+ overlay-point)))
+          (when rsvp-use-focal-point-face-p
+            ;; apply face to word focal point
+            (if (null ov)
+                (progn ;; create overlay
+                  (setq ov (make-overlay overlay-point
+                                         (1+ overlay-point)
+                                         buff))
+                  (overlay-put ov 'face 'rsvp-focal-point-face))
+              ;; else, move existing overlay. range gets messed up when text is deleted
+              (move-overlay ov overlay-point (1+ overlay-point))))
           ;; book keeping on index
           (cl-incf i)
           (when (>= i (length words))
