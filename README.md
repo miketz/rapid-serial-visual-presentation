@@ -18,10 +18,7 @@ Emacs.
 
 # Installation
 
-Requires Emacs 24.4 which will support:
-  - lexical binding
-  - cl-lib
-  - with-eval-after-load for sample config below
+Requires Emacs 24.4.
 
 Place **rsvp.el** in **/your/chosen/folder**.
 
