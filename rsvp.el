@@ -161,7 +161,10 @@ This is configurable for those who prefer no face applied at all."
   :group 'rsvp)
 
 (defface rsvp-focal-point-face
-  '((t (:foreground "#FF0000")))
+  '((((background dark))
+     (:foreground "#ffa500"))  ;; orange
+    (t ;; light background
+     (:foreground "#FF0000"))) ;; red
   "Face for the focal point character of a word."
   :group 'rsvp)
 
