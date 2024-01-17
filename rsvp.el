@@ -267,15 +267,15 @@ Creates private variables:
 
         ;; extra pause for longer words
         (when rsvp-scale-delay-to-word-length-p
-          ;; for each 2 letter chunk after the first 5 letters, add a little delay.
+          ;; for each 1 letter chunk after the first 5 letters, add a little delay.
           ;; For now do not configure this as I want the freedom to change how
           ;; it works without breaking configs.
           (let ((chunks (/ (- (length word) 5)
-                           2)))
+                           1))) ; redundant with 1, but i want to keep the formula
             (when (> chunks 1)
               (timer-inc-time rsvp--timer
-                              ;; increase delay 20% for each extra chunk
-                              (* (* rsvp-delay-seconds 0.20)
+                              ;; increase delay 10% for each extra chunk
+                              (* (* rsvp-delay-seconds 0.10)
                                  chunks)))))
 
         (with-current-buffer buff
