@@ -286,7 +286,7 @@ Creates private variables:
           (cl-loop repeat (+ rsvp-pad-left
                              rsvp--min-focal-point-padding)
                    do (insert " "))
-          (insert "│\n")
+          (insert "╵\n")
           (let* ((orp (rsvp-optimal-recognition-point word))
                  (orp-padding (- rsvp--min-focal-point-padding orp)))
             ;; insert spaces to line up orp with the |
@@ -299,7 +299,7 @@ Creates private variables:
           (cl-loop repeat (+ rsvp-pad-left
                              rsvp--min-focal-point-padding)
                    do (insert " "))
-          (insert "│\n")
+          (insert "╷\n")
           (insert rsvp--horizontal-line)
           (when rsvp-use-focal-point-face-p
             ;; apply face to word focal point
@@ -345,12 +345,12 @@ starts."
     (cl-loop repeat (+ rsvp-pad-left
                        rsvp--min-focal-point-padding)
              do (insert " "))
-    (insert "│\n")
+    (insert "╵\n")
     (insert "\n")
     (cl-loop repeat (+ rsvp-pad-left
                        rsvp--min-focal-point-padding)
              do (insert " "))
-    (insert "│\n")
+    (insert "╷\n")
     (insert rsvp--horizontal-line)))
 
 ;;;###autoload
