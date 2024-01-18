@@ -467,7 +467,8 @@ Call this if the serial display is taking too long."
 Same as `quit-window'.  But stop the reader first."
   (interactive)
   (rsvp-stop-reader)
-  (quit-window))
+  ;; kill the buffer too
+  (quit-window t))
 
 (defun rsvp-toggle-start-stop ()
   "Pause or unpause the reader."
