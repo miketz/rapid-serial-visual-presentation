@@ -70,6 +70,11 @@
 
 ;;; TODO: centered view option? something like darkroom-mode? look into how to handle
 ;;;       width/height with regards to font scaling.
+;;; TODO: clean up words list. I think the closure functions keep stuff
+;;;       referenced and intelligible for GC. Not a big deal as the same list
+;;;       will be overwritten on the next run (ie the leak does not accumulate
+;;;       each run of the reader). But it's still better to be tidy. Maybe
+;;;       simply setting some things to nil at the end will do it.
 
 ;;; Code:
 (require 'cl-lib)
