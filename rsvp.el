@@ -453,14 +453,11 @@ If DELAYP is non-nil, apply `rsvp-initial-delay-seconds'."
 Cancels `rsvp--timer'.
 Call this if the serial display is taking too long."
   (interactive)
-  (if (timerp rsvp--timer)
-      (progn
-        (cancel-timer rsvp--timer)
-        ;; Set to nil to make the timer object "extra canceled" and eligible for garbage collection.
-        (setq rsvp--timer nil)
-        (message "stopped serial reader!"))
-    ;; else
-    (message "serial reader was already stopped.")))
+  (when (timerp rsvp--timer)
+    (cancel-timer rsvp--timer)
+    ;; Set to nil to make the timer object "extra canceled" and eligible for garbage collection.
+    (setq rsvp--timer nil)
+    (message "stopped serial reader!")))
 
 (defun rsvp--quit-window ()
   "Close the output buffer window.
