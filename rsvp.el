@@ -196,13 +196,16 @@ larger words."
 (defconst rsvp--min-focal-point-padding
   (rsvp-optimal-recognition-point rsvp--longest-word))
 
-(define-minor-mode rsvp-mode
-  "Minor mode to support key binds and `kill-buffer-hook'."
+
+(define-derived-mode rsvp-mode nil "rsvp"
+  "Mode for the output buffer."
   :lighter " rsvp"
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "<SPC>") #'rsvp-toggle-start-stop)
             (define-key map (kbd "r") #'rsvp-rewind-reader)
-            map))
+            map)
+  (read-only-mode 1))
+
 
 ;; The only timer. Only 1 serial reader may be running at any time.
 (defvar rsvp--timer nil)
@@ -286,38 +289,41 @@ Creates private variables:
                                  chunks)))))
 
         (with-current-buffer buff
-          (erase-buffer)
-          ;; add padding
-          (cl-loop repeat rsvp-pad-above do (insert "\n"))
-          (insert rsvp--horizontal-line)
-          (cl-loop repeat (+ rsvp-pad-left
-                             rsvp--min-focal-point-padding)
-                   do (insert " "))
-          (insert "╵\n")
-          (let* ((orp (rsvp-optimal-recognition-point word))
-                 (orp-padding (- rsvp--min-focal-point-padding orp)))
-            ;; insert spaces to line up orp with the |
+          ;; buffer is read only for users, but not for us!
+          (let ((inhibit-read-only t))
+            (erase-buffer)
+            ;; add padding
+            (cl-loop repeat rsvp-pad-above do (insert "\n"))
+            (insert rsvp--horizontal-line)
             (cl-loop repeat (+ rsvp-pad-left
-                               orp-padding)
+                               rsvp--min-focal-point-padding)
                      do (insert " "))
-            ;; insert word
-            (insert word))
-          (insert "\n")
-          (cl-loop repeat (+ rsvp-pad-left
-                             rsvp--min-focal-point-padding)
-                   do (insert " "))
-          (insert "╷\n")
-          (insert rsvp--horizontal-line)
-          (when rsvp-use-focal-point-face-p
-            ;; apply face to word focal point
-            (if (null ov)
-                (progn ;; create overlay
-                  (setq ov (make-overlay overlay-point
-                                         (1+ overlay-point)
-                                         buff))
-                  (overlay-put ov 'face 'rsvp-focal-point-face))
-              ;; else, move existing overlay. range gets messed up when text is deleted
-              (move-overlay ov overlay-point (1+ overlay-point))))
+            (insert "╵\n")
+            (let* ((orp (rsvp-optimal-recognition-point word))
+                   (orp-padding (- rsvp--min-focal-point-padding orp)))
+              ;; insert spaces to line up orp with the |
+              (cl-loop repeat (+ rsvp-pad-left
+                                 orp-padding)
+                       do (insert " "))
+              ;; insert word
+              (insert word))
+            (insert "\n")
+            (cl-loop repeat (+ rsvp-pad-left
+                               rsvp--min-focal-point-padding)
+                     do (insert " "))
+            (insert "╷\n")
+            (insert rsvp--horizontal-line)
+            (when rsvp-use-focal-point-face-p
+              ;; apply face to word focal point
+              (if (null ov)
+                  (progn ;; create overlay
+                    (setq ov (make-overlay overlay-point
+                                           (1+ overlay-point)
+                                           buff))
+                    (overlay-put ov 'face 'rsvp-focal-point-face))
+                ;; else, move existing overlay. range gets messed up when text is deleted
+                (move-overlay ov overlay-point (1+ overlay-point)))))
+
           ;; book keeping on index
           (cl-incf i)
           (when (>= i (length words))
@@ -345,20 +351,22 @@ This is intented to be a temproary display for `rsvp-initial-delay-seconds'.
 Giving the user time to focus their eye on the focal point before the display
 starts."
   (with-current-buffer buff
-    (erase-buffer)
-    ;; add padding
-    (cl-loop repeat rsvp-pad-above do (insert "\n"))
-    (insert rsvp--horizontal-line)
-    (cl-loop repeat (+ rsvp-pad-left
-                       rsvp--min-focal-point-padding)
-             do (insert " "))
-    (insert "╵\n")
-    (insert "\n")
-    (cl-loop repeat (+ rsvp-pad-left
-                       rsvp--min-focal-point-padding)
-             do (insert " "))
-    (insert "╷\n")
-    (insert rsvp--horizontal-line)))
+    ;; buffer is read only for users, but not for us!
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      ;; add padding
+      (cl-loop repeat rsvp-pad-above do (insert "\n"))
+      (insert rsvp--horizontal-line)
+      (cl-loop repeat (+ rsvp-pad-left
+                         rsvp--min-focal-point-padding)
+               do (insert " "))
+      (insert "╵\n")
+      (insert "\n")
+      (cl-loop repeat (+ rsvp-pad-left
+                         rsvp--min-focal-point-padding)
+               do (insert " "))
+      (insert "╷\n")
+      (insert rsvp--horizontal-line))))
 
 ;;;###autoload
 (cl-defun rsvp-start-reader (&optional start end)
