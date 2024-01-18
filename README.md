@@ -78,7 +78,7 @@ Add the following text to your .emacs or init.el file:
 
 - Sometimes going faster makes it easier to comprehend a set of words. Consider the extreme slow speed of 1 word per minute. At any given time you would have no understanding or context of what you are reading. Words are dropped from your brain before you can comprehend the full sentence. The cure is speed. Go as fast as you can handle.
 
-As you approach ludicrous speed you may need a longer break at the end of each sentence. It makes a nice cadence of fast/rest. 
+- As you approach ludicrous speed you may need a longer break at the end of each sentence. It makes a nice cadence of fast/rest. 
 
         ;; ludicrous speed!
         (setq rsvp-delay-seconds 0.06)
