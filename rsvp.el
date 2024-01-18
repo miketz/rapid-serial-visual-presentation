@@ -197,14 +197,19 @@ larger words."
   (rsvp-optimal-recognition-point rsvp--longest-word))
 
 
-(define-derived-mode rsvp-mode nil "rsvp"
+(define-derived-mode rsvp-mode special-mode "rsvp"
   "Mode for the output buffer."
   :lighter " rsvp"
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "<SPC>") #'rsvp-toggle-start-stop)
             (define-key map (kbd "r") #'rsvp-rewind-reader)
+            (define-key map (kbd "q") #'rsvp--quit-window)
             map)
-  (read-only-mode 1))
+  ;; (read-only-mode 1) ;; inherit this from special-mode
+  )
+
+;; override "q" key of special-mode. Stop the reader before hiding the window.
+(define-key rsvp-mode-map (kbd "q") #'rsvp--quit-window)
 
 
 ;; The only timer. Only 1 serial reader may be running at any time.
@@ -424,7 +429,7 @@ buffer text."
       ;; add a fancy header to the buffer. With info on how to abort.
       (set (make-local-variable 'header-line-format)
            (substitute-command-keys
-            "[Stop/Play]: \\[rsvp-toggle-start-stop]  [Rewind]: \\[rsvp-rewind-reader]")))
+            "[Stop/Play]: \\[rsvp-toggle-start-stop]  [Rewind]: \\[rsvp-rewind-reader]  [Quit]: \\[rsvp--quit-window]")))
 
     (rsvp--gen-fns buff words)
     (rsvp--draw buff t)))
@@ -456,6 +461,13 @@ Call this if the serial display is taking too long."
         (message "stopped serial reader!"))
     ;; else
     (message "serial reader was already stopped.")))
+
+(defun rsvp--quit-window ()
+  "Close the output buffer window.
+Same as `quit-window'.  But stop the reader first."
+  (interactive)
+  (rsvp-stop-reader)
+  (quit-window))
 
 (defun rsvp-toggle-start-stop ()
   "Pause or unpause the reader."
