@@ -64,3 +64,23 @@ Add the following text to your .emacs or init.el file:
     ;; weird key bind issues with evil mode, so avoid it for now.
     (push `(,rsvp-buff-name . emacs) evil-buffer-regexps)))
 ```
+
+
+# Tips
+
+- RSVP works best on prose. And better on prose conveying familiar ideas. If you are learning something new and need to mull over the text, RSVP may not be ideal.
+
+- Try experimenting with faster speeds. By default a modest speed of 0.3 seconds is used so you don't freak out. But you should move on to something faster soon. You may be surprised how fast you can read and comprehend the text.
+
+        ;; go fast
+        (setq rsvp-delay-seconds 0.08)
+
+
+- Sometimes going faster makes it easier to comprehend a set of words. Consider the extreme slow speed of 1 word per minute. At any given time you would have no understanding or context of what you are reading. Words are dropped from your brain before you can comprehend the full sentence. The cure is speed. Go as fast as you can handle.
+
+As you approach ludicrous speed you may need a longer break at the end of each sentence. It makes a nice cadence of fast/rest. 
+
+        ;; ludicrous speed!
+        (setq rsvp-delay-seconds 0.06)
+        ;; but take a 7x break after each sentence to avoid burnout.
+        (setq rsvp-pause-end-of-sentence-% 7.0)
