@@ -3,7 +3,7 @@
 ;;; License: GPL version 3
 
 ;;; Package-Requires: ((emacs "24.4"))
-;;; Version: 0.4.0
+;;; Version: 0.5.0
 ;;; URL: https://github.com/miketz/rapid-serial-visual-presentation
 
 
