@@ -75,6 +75,11 @@
 ;;;       will be overwritten on the next run (ie the leak does not accumulate
 ;;;       each run of the reader). But it's still better to be tidy. Maybe
 ;;;       simply setting some things to nil at the end will do it.
+;;; TODO: micro optimization: close over global congfig vars in a closure for
+;;;       faster var lookups. but the downside is the user can't change the
+;;;       values mid run via (setq). Will need to expose new control fns to
+;;;       change things mid run. May be worth it when reading at super fast
+;;;       speeds. do a test.
 
 ;;; Code:
 (require 'cl-lib)
