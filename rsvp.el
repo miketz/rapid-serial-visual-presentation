@@ -420,9 +420,6 @@ buffer text."
     (switch-to-buffer-other-window buff)
 
     (with-current-buffer buff
-      ;; scale font size to configured value
-      (text-scale-set rsvp-font-scale-level)
-
       ;; Although only 1 overlay is created per run, avoid amassing overlays.
       ;; But `delete-overlay' does not truly delete the overlay? Delete anyway.
       (cl-loop for o in (car (overlay-lists)) do
@@ -430,6 +427,8 @@ buffer text."
 
       ;; turn on mode. supports key binds, and the kill-buffer-hook
       (rsvp-mode)
+      ;; scale font size to configured value
+      (text-scale-set rsvp-font-scale-level)
 
       ;; add a fancy header to the buffer. With info on how to abort.
       (set (make-local-variable 'header-line-format)
