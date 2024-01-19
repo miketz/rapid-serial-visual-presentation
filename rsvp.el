@@ -110,10 +110,10 @@ Set to 1.0 (100%) to double the delay."
 
 
 (defcustom rsvp-pause-end-of-sentence-p t
-  "When non-nil have extra delay at the end of a sentance."
+  "When non-nil have extra delay at the end of a sentence."
   :type 'boolean :group 'rsvp)
 (defcustom rsvp-pause-end-of-sentence-% 2.0
-  "Percentage of extra delay time at the end of a sentance.
+  "Percentage of extra delay time at the end of a sentence.
 Set to 0 for no extra pause.
 Set to 1.0 (100%) to double the delay."
   :type 'number :group 'rsvp)
@@ -272,7 +272,7 @@ Creates private variables:
       ;; for each word. But works OK for now.
       (let ((word (aref words i)))
 
-        ;; extra pause at end of sentance.
+        ;; extra pause at end of sentence.
         (when (and rsvp-pause-end-of-sentence-p
                    (or (string-suffix-p "." word)
                        (string-suffix-p "?" word)
@@ -282,7 +282,7 @@ Creates private variables:
                           (* rsvp-delay-seconds
                              rsvp-pause-end-of-sentence-%)))
 
-        ;; extra puase at comma
+        ;; extra pause at comma
         (when (and rsvp-pause-comma-p
                    (string-suffix-p "," word))
           (timer-inc-time rsvp--timer
@@ -362,7 +362,7 @@ Creates private variables:
 
 (defun rsvp--draw-empty-focal-point-box (buff)
   "Draw an empty focal point box in BUFF.
-This is intented to be a temproary display for `rsvp-initial-delay-seconds'.
+This is intended to be a temporary display for `rsvp-initial-delay-seconds'.
 Giving the user time to focus their eye on the focal point before the display
 starts."
   (with-current-buffer buff
