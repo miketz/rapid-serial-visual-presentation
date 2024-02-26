@@ -80,6 +80,7 @@
 ;;;       values mid run via (setq). Will need to expose new control fns to
 ;;;       change things mid run. May be worth it when reading at super fast
 ;;;       speeds. do a test.
+;;; TODO: use text properties instead of overlay. Might be a bit faster.
 
 ;;; Code:
 (require 'cl-lib)
