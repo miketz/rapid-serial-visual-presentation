@@ -52,7 +52,7 @@
 ;;; (setq rsvp-use-focal-point-face-p t)
 ;;; (custom-set-faces
 ;;;  `(rsvp-focal-point-face ((((background dark))
-;;;                            (:foreground "#FFA500")) ;; orange
+;;;                            (:foreground "#FFA500")) ; orange
 ;;;                           (t ;; light background
 ;;;                            (:foreground "#FF0000")))))
 ;;; ;; Sample key binds.
@@ -177,9 +177,9 @@ This is configurable for those who prefer no face applied at all."
 
 (defface rsvp-focal-point-face
   '((((background dark))
-     (:foreground "#ffa500"))  ;; orange
+     (:foreground "#ffa500"))  ; orange
     (t ;; light background
-     (:foreground "#FF0000"))) ;; red
+     (:foreground "#FF0000"))) ; red
   "Face for the focal point character of a word."
   :group 'rsvp)
 
@@ -216,7 +216,7 @@ larger words."
             (define-key map (kbd "r") #'rsvp-rewind-reader)
             (define-key map (kbd "q") #'rsvp--quit-window)
             map)
-  ;; (read-only-mode 1) ;; inherit this from special-mode
+  ;; (read-only-mode 1) ; inherit this from special-mode
   )
 
 ;; override "q" key of special-mode. Stop the reader before hiding the window.
@@ -247,7 +247,7 @@ Creates private variables:
   i: word list index
   overlay-point: location in buffer of the focal point character
   ov: the overlay"
-  (let* ((i 0) ;; word list index
+  (let* ((i 0) ; word list index
          ;; where to apply the focal point face
          (overlay-point (+ rsvp-pad-above
                            ;; includes newline
@@ -354,10 +354,10 @@ Creates private variables:
         ;; compensate.
         (cl-incf cnt)
         (if (< i cnt)
-            (setq i 0) ;; avoid negative numbers
+            (setq i 0) ; avoid negative numbers
           (setq i (- i cnt)))
 
-        (rsvp--draw buff nil) ;; no delay
+        (rsvp--draw buff nil) ; no delay
         ))))
 
 
@@ -484,7 +484,7 @@ Same as `quit-window'.  But stop the reader first."
       (rsvp-stop-reader)
     ;; else
     (rsvp--draw (get-buffer rsvp-buff-name)
-                nil)) ;; no initial delay
+                nil)) ; no initial delay
   )
 
 
